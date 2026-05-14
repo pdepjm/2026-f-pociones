@@ -123,3 +123,48 @@ defensaSegun heroe
     | ataque heroe > 100 = 50
     | ataque heroe >= 50 = 30 
     | otherwise = 10
+
+
+--- hasta aca lo que vimos en clase ---
+
+
+-- Esta funcion no seria conveniente de hacer con composicion.
+leSirve :: Pocion -> Heroe -> Bool
+leSirve pocion heroe = not (esPoderoso heroe) && esPoderoso (pocion heroe)
+
+aQuienesLesSirve :: Pocion -> [Heroe] -> [Heroe]
+aQuienesLesSirve pocion = filter (leSirve pocion)
+
+sujetoDePrueba :: Heroe
+sujetoDePrueba = UnHeroe{vida = 100, defensa= 30, ataque = 25}
+
+
+-- Dos versiones de "potencial". Ambas versiones son validas!
+
+-- Simple:
+potencial :: Pocion -> Number
+potencial pocion = poder (pocion sujetoDePrueba)
+
+-- Version point free con composicion y aplicacion parcial:
+potencial2 :: Pocion -> Number
+potencial2 = poder . ($ sujetoDePrueba)
+
+--Dos versiones de "pocionesMasFuertes". Ambas validas!
+
+-- Con ap. parcial y composicion:
+pocionesMasFuertes :: Number -> [Pocion] -> [Pocion]
+pocionesMasFuertes umbral = filter ( (> umbral) . potencial) 
+
+-- Delegando y ap. parcial:
+pocionesMasFuertes2 :: Number -> [Pocion] -> [Pocion]
+pocionesMasFuertes2 umbral = filter (tieneMasPotencial umbral)
+
+tieneMasPotencial :: Number -> Pocion -> Bool
+tieneMasPotencial umbral pocion = potencial pocion > umbral
+
+
+algunoEsSuficientementeFuerte :: Pocion -> [Heroe] -> Bool
+algunoEsSuficientementeFuerte pocion = any (esFuertePara pocion)
+
+esFuertePara :: Pocion -> Heroe -> Bool
+esFuertePara pocion heroe = poder heroe > potencial pocion 
