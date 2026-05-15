@@ -81,15 +81,15 @@ esPoderoso' :: Heroe -> Bool
 esPoderoso'  = (> 100) . poder 
 
 pocionArtesanal :: Number -> Pocion
-pocionArtesanal unidades = pocionBase . (cambiarAtaque (/ unidades)) . pocionBase
+pocionArtesanal unidades = pocionBase . cambiarAtaque (/ unidades) . pocionBase
 
 -- Version con lambda
 pocionArriesgada :: Pocion
-pocionArriesgada =  pocionBase . (cambiarDefensa (\x -> 3) ) . crazyPotion
+pocionArriesgada =  pocionBase . cambiarDefensa (\x -> 3) . crazyPotion
 
 -- Version con funcion auxiliar
 pocionArriesgada2 :: Pocion
-pocionArriesgada2 =  pocionBase . (cambiarDefensa siempreTres ) . crazyPotion
+pocionArriesgada2 =  pocionBase . cambiarDefensa siempreTres . crazyPotion
 
 siempreTres :: a -> Number
 siempreTres _ = 3
